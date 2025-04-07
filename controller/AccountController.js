@@ -35,22 +35,27 @@ const retrieveAccountDetails = (req, res) => {
 };
 
 const updateAccountDetails = (req, res) => {
-  const { name, address, phone, accountNumber, bankId, id } = req.body;
+  const { name, address, phone, accountNumber } = req.body;
+  const id = req.params.id;
+
   try {
-    AccountModel.findById(id)
-      .then((account) => {
+    AccountModel.findById(id).then((account) => {
+      if (account) {
         account.name = name;
         account.address = address;
         account.phone = phone;
         account.accountNumber = accountNumber;
+
         account
           .save()
           .then((update) => {
-            res.status(201).json(update);
+            res.status(200).json(update);
           })
           .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
+      } else {
+        res.status(404).json({ message: "error" });
+      }
+    });
   } catch (error) {
     console.log(error);
   }

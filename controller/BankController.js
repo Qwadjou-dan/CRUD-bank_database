@@ -61,7 +61,7 @@ const updateBankDetails = (req, res) => {
           })
           .catch((err) => console.log(err));
       } else {
-        res.status(500).json({ message: error });
+        res.status(500).json({ message: "error" });
       }
     })
     .catch((err) => console.log(err));

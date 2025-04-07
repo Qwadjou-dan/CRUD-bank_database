@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/account", createAccountDetails);
 router.get("/account", retrieveAccountDetails);
-router.put("/account", updateAccountDetails);
+router.put("/account/:id", updateAccountDetails);
 
 module.exports = router;
