@@ -61,8 +61,20 @@ const updateAccountDetails = (req, res) => {
   }
 };
 
+const deleteAccountDetails = async (req, res) => {
+  const id = req.params.id;
+  const deleteId = await AccountModel.findByIdAndDelete(id);
+  if (deleteId) {
+    await deleteId.deleteOne();
+    res.status(201).json("Account Deleted");
+  } else {
+    res.status(404).json("Account not found");
+  }
+};
+
 module.exports = {
   createAccountDetails,
   retrieveAccountDetails,
   updateAccountDetails,
+  deleteAccountDetails,
 };
