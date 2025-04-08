@@ -1,9 +1,17 @@
 const BankModel = require("../model/BankModel");
+const { validationResult } = require("express-validator");
 
 const createBankDetails = (req, res) => {
   try {
+    //validation check
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      console.log(error);
+      res.json({ message: error.array()[0].msg });
+    }
+    //get the data from the request body
     const { name, location, address, phone, accountNumber } = req.body;
-
+    //create and push data to the model
     const bank = BankModel({
       name,
       location,
@@ -11,11 +19,13 @@ const createBankDetails = (req, res) => {
       phone,
       accountNumber,
     });
-
+    //save data in the model and give a response
     bank
       .save()
-      .then(() => {
-        res.status(201).json(bank);
+      .then((bank) => {
+        res
+          .status(201)
+          .json({ message: "Bank created successfully", data: bank });
       })
       .catch((err) => console.log(err));
   } catch (error) {
