@@ -14,11 +14,11 @@ const BankSchema = Schema({
   },
   address: {
     type: String,
-    required: true,
+    // required: true,
   },
   phone: {
     type: Number,
-    required: true,
+    // required: true,
   },
   accountNumber: {
     type: Number,

@@ -20,7 +20,7 @@ server.use(userRoute);
 //start server
 mongoose
   .connect(
-    "mongodb+srv://DanDb:GD42IWEvmOcwicvz@cluster0.8kbvt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://DanDb:FaHQKzbUw46Cf1lZ@cluster0.8kbvt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
   )
   .then((result) => {
     server.listen(5050, "localhost", () => {

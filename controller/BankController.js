@@ -1,5 +1,36 @@
 const BankModel = require("../model/BankModel");
-const { validationResult } = require("express-validator");
+const { body, validationResult } = require("express-validator");
+
+//Validate account details
+const validateAccountDetails = [
+  body("accountNumber")
+    .isNumeric()
+    .withMessage("Account must be numeric")
+    .isLength({ min: 10, max: 10 })
+    .withMessage("Account must be 10 digits long")
+    .custom((value, { req }) => {
+      return BankModel.findOne({ accountNumber: value }).then(
+        (accountNumberValue) => {
+          if (accountNumberValue) {
+            return Promise.reject("Account number already exist");
+          }
+        }
+      );
+    }),
+  body("name").notEmpty().trim().withMessage("Name field empty"),
+  body("phone")
+    .isMobilePhone("en-GH")
+    .withMessage("phone number invalid")
+    .custom((value, { req }) => {
+      return BankModel.findOne({ phone: value }).then((bankPhoneNumber) => {
+        if (bankPhoneNumber) {
+          return Promise.reject("phone number in use");
+        }
+      });
+    }),
+  body("location").notEmpty().withMessage("location is required"),
+  body("address").notEmpty().withMessage("address is rrequired"),
+];
 
 const createBankDetails = (req, res) => {
   try {
@@ -92,4 +123,5 @@ module.exports = {
   retrieveBankDetails,
   updateBankDetails,
   deleteBankDetails,
+  validateAccountDetails,
 };
