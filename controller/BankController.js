@@ -2,7 +2,7 @@ const BankModel = require("../model/BankModel");
 const { body, validationResult } = require("express-validator");
 
 //Validate account details
-const validateAccountDetails = [
+const validateBankDetails = [
   body("accountNumber")
     .isNumeric()
     .withMessage("Account must be numeric")
@@ -123,5 +123,5 @@ module.exports = {
   retrieveBankDetails,
   updateBankDetails,
   deleteBankDetails,
-  validateAccountDetails,
+  validateBankDetails,
 };

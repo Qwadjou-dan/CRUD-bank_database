@@ -1,8 +1,63 @@
 const AccountModel = require("../model/accountModel");
+const { body, validationResult } = require("express-validator");
+
+//validate account details
+const validateAccountDetails = [
+  body("accountNumber")
+    .notEmpty()
+    .withMessage("Account number is required")
+    .custom(async (value) => {
+      try {
+        const accountNumberValue = await AccountModel.findOne({
+          accountNumber: value,
+        });
+        if (accountNumberValue) {
+          throw new Error("Account number already exist");
+        }
+      } catch (error) {
+        throw new Error(error.message || "Error validating account number");
+      }
+    }),
+  body("phone")
+    .notEmpty()
+    .withMessage("Phone number is required")
+    .custom(async (value) => {
+      try {
+        const phoneNumberValue = await AccountModel.findOne({ phone: value });
+        if (phoneNumberValue) {
+          throw new Error("Phone number already exist");
+        }
+      } catch (error) {
+        throw new Error(error.message || "Error validating phone number");
+      }
+    })
+    .custom((value) => {
+      try {
+        const ghanaNum = /^(\+233|0)[0-9]{9}$/;
+        const nigeriaNum = /^(\+234|0)[0-9]{10}$/;
+        if (!ghanaNum.test(value) && !nigeriaNum.test(value)) {
+          throw new Error(
+            "Phone number must be a valid Ghanaian or Nigerian number"
+          );
+        }
+      } catch (error) {
+        throw new Error(error.message || "Error validating phone number");
+      }
+    }),
+  body("name").notEmpty().trim().withMessage("Name must not be empty"),
+];
 
 const createAccountDetails = (req, res) => {
   const { name, address, phone, accountNumber, bankId } = req.body;
   try {
+    //validation check
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      const AllErrMsgs = errors.array().map((err) => err.msg);
+      res.status(404).json({ message: AllErrMsgs });
+    }
+
     const account = AccountModel({
       name,
       address,
@@ -77,4 +132,5 @@ module.exports = {
   retrieveAccountDetails,
   updateAccountDetails,
   deleteAccountDetails,
+  validateAccountDetails,
 };

@@ -4,11 +4,12 @@ const {
   retrieveAccountDetails,
   updateAccountDetails,
   deleteAccountDetails,
+  validateAccountDetails,
 } = require("../controller/AccountController");
 
 const router = express.Router();
 
-router.post("/account", createAccountDetails);
+router.post("/account", validateAccountDetails, createAccountDetails);
 router.get("/account", retrieveAccountDetails);
 router.put("/account/:id", updateAccountDetails);
 router.delete("/account/:id", deleteAccountDetails);
