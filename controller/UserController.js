@@ -1,13 +1,15 @@
 //imports
 const UserModel = require("../model/userModel");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 //controllers
 const signUpController = (req, res) => {
   const { name, email, password } = req.body;
   try {
     bcrypt
-      .hash(password, 1)
+      .hash(password, 10)
       .then((hashPassword) => {
         const user = UserModel({
           name,
@@ -44,6 +46,25 @@ const signInController = (req, res) => {
             }
           })
           .catch((err) => console.log(err));
+
+        //Authentication
+        //create token
+        const token = jwt.sign(
+          { id: user._id, email: user.email },
+          process.env.SECRET_KEY,
+          { expiresIn: "1d" }
+        );
+
+        //send toeken to client
+        res.status(200).json({
+          message: "User signed in",
+          token: token,
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+          },
+        });
       } else {
         res.status(404).json({ message: "User not found" });
       }

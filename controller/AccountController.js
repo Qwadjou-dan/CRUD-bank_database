@@ -31,7 +31,7 @@ const validateAccountDetails = [
         throw new Error(error.message || "Error validating phone number");
       }
     })
-    .custom((value) => {
+    .custom(async (value) => {
       try {
         const ghanaNum = /^(\+233|0)[0-9]{9}$/;
         const nigeriaNum = /^(\+234|0)[0-9]{10}$/;

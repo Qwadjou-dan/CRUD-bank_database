@@ -5,6 +5,7 @@ const { default: mongoose } = require("mongoose");
 const bankRoute = require("./routes/BankRoute");
 const accountRoute = require("./routes/AccountRoute");
 const userRoute = require("./routes/UserRoute");
+require("dotenv").config();
 
 //initialize
 const server = express();
@@ -18,12 +19,8 @@ server.use(accountRoute);
 server.use(userRoute);
 
 //start server
-mongoose
-  .connect(
-    "mongodb+srv://DanDb:FaHQKzbUw46Cf1lZ@cluster0.8kbvt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  )
-  .then((result) => {
-    server.listen(5050, "localhost", () => {
-      console.log("Server is running on port 5050");
-    });
+mongoose.connect(process.env.MONGO_DB).then((result) => {
+  server.listen(5050, "localhost", () => {
+    console.log("Server is running on port 5050");
   });
+});
